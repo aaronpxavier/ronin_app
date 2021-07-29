@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController()
 public class AuthController {
@@ -29,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> getToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
@@ -41,5 +44,29 @@ public class AuthController {
         final String jwt = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
+
+    //login end point for cookie based authentication.
+    @PostMapping("/auth/login/webapp")
+    public ResponseEntity<?> getTokenWebapp(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) {
+        String jwt;
+        UserDetails userDetails;
+        Cookie cookie;
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or Password is not valid");
+        }
+
+        userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        jwt = jwtTokenUtil.generateToken(userDetails);
+        cookie = new Cookie("jwtToken", jwt);
+        cookie.setHttpOnly(true);
+        //cookie.setSecure(true);
+        cookie.setDomain("localhost");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
 
 }
