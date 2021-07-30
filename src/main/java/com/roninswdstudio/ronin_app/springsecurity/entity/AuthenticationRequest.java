@@ -1,4 +1,4 @@
-package com.roninswdstudio.ronin_app.springsecurity.models;
+package com.roninswdstudio.ronin_app.springsecurity.entity;
 
 public class AuthenticationRequest {
 
@@ -9,6 +9,8 @@ public class AuthenticationRequest {
         this.username = username;
         this.password = password;
     }
+
+    public AuthenticationRequest(){};
 
     public String getUsername() {
         return username;

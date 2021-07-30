@@ -1,4 +1,4 @@
-package com.roninswdstudio.ronin_app.springsecurity.models;
+package com.roninswdstudio.ronin_app.springsecurity.entity;
 
 import javax.persistence.*;
 

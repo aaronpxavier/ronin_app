@@ -1,4 +1,4 @@
-package com.roninswdstudio.ronin_app.springsecurity.models;
+package com.roninswdstudio.ronin_app.springsecurity.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,13 +11,15 @@ public class RoninUserDetails implements UserDetails {
 
     private String userName;
     private String password;
-    private boolean isEnabled;
+    private boolean enabled;
+    private boolean locked;
     private List<SimpleGrantedAuthority> authorities;
 
     public RoninUserDetails (User user) {
-        this.userName = user.getUsername();
+        this.userName = user.getEmail();
         this.password = user.getPassword();
-        this.isEnabled = user.getEnabled();
+        this.enabled = user.isEnabled();
+        this.locked = user.isLocked();
         this.authorities = user.getRoles()
                 .parallelStream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().toString()))
@@ -53,9 +55,7 @@ public class RoninUserDetails implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+    public boolean isAccountNonLocked() { return !locked; }
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -64,6 +64,6 @@ public class RoninUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 }

@@ -1,6 +1,6 @@
 package com.roninswdstudio.ronin_app.springsecurity.services;
 
-import com.roninswdstudio.ronin_app.springsecurity.models.RoninUserDetails;
+import com.roninswdstudio.ronin_app.springsecurity.entity.RoninUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

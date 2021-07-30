@@ -1,7 +1,7 @@
 package com.roninswdstudio.ronin_app.controller;
 
-import com.roninswdstudio.ronin_app.springsecurity.models.AuthenticationRequest;
-import com.roninswdstudio.ronin_app.springsecurity.models.AuthenticationResponse;
+import com.roninswdstudio.ronin_app.springsecurity.entity.AuthenticationRequest;
+import com.roninswdstudio.ronin_app.springsecurity.entity.AuthenticationResponse;
 import com.roninswdstudio.ronin_app.springsecurity.services.RoninUserDetailsService;
 import com.roninswdstudio.ronin_app.springsecurity.services.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,6 @@ public class AuthController {
     @PostMapping("/auth/login")
     public ResponseEntity<?> getToken(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
-
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or Password is not valid");
@@ -42,7 +41,7 @@ public class AuthController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, userDetails));
     }
 
     //login end point for cookie based authentication.
@@ -65,7 +64,7 @@ public class AuthController {
         cookie.setDomain("localhost");
         cookie.setPath("/");
         response.addCookie(cookie);
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, userDetails));
     }
 
 
