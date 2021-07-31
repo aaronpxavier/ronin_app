@@ -3,8 +3,8 @@ package com.roninswdstudio.ronin_app.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(	name = "carosel_images")
-public class CaroselImage {
+@Table(	name = "carousel_images")
+public class CarouselImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

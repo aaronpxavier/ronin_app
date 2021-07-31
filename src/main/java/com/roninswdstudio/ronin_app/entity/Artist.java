@@ -17,9 +17,9 @@ public class Artist {
     @Column(name = "last_name")
     private String lastName;
 
-    private Date dob;
-
     private String bio;
+
+    private String username;
 
     @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
     private List<ExhibitImage> exhibitImages;
@@ -48,14 +48,6 @@ public class Artist {
         this.lastName = lastName;
     }
 
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-
     public String getBio() {
         return bio;
     }
@@ -70,5 +62,13 @@ public class Artist {
 
     public void setExhibitImages(List<ExhibitImage> exhibitImages) {
         this.exhibitImages = exhibitImages;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

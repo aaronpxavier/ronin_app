@@ -3,6 +3,7 @@ package com.roninswdstudio.ronin_app.springsecurity.entity;
 import com.roninswdstudio.ronin_app.springsecurity.entity.Role;
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,6 +23,8 @@ public class User {
     private boolean locked;
 
     private boolean enabled;
+
+    private Date dob;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Role> roles = new ArrayList<>();
@@ -75,5 +78,13 @@ public class User {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 }

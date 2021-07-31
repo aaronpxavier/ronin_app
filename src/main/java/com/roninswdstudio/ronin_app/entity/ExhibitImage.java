@@ -14,6 +14,7 @@ public class ExhibitImage {
 
     private Date date;
 
+    private Date uploadDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
@@ -61,5 +62,13 @@ public class ExhibitImage {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }
