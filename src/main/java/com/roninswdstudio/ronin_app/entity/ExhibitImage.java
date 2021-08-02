@@ -1,11 +1,15 @@
 package com.roninswdstudio.ronin_app.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(	name = "exhibit_images")
 public class ExhibitImage {
+    public ExhibitImage() {}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -16,13 +20,20 @@ public class ExhibitImage {
 
     private Date uploadDate;
 
+    private String description;
+
+    @Column(name = "image_url")
+    private String imageURL;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id")
+    @JsonBackReference
     private Artist artist;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat_id")
-    private Category category;
+    @JsonBackReference(value = "category2")
+    private Category cat;
 
     public long getId() {
         return id;
@@ -56,12 +67,12 @@ public class ExhibitImage {
         this.artist = artist;
     }
 
-    public Category getCategory() {
-        return category;
+    public Category getCat() {
+        return cat;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCat(Category cat) {
+        this.cat = cat;
     }
 
     public Date getUploadDate() {
@@ -71,4 +82,22 @@ public class ExhibitImage {
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+
 }

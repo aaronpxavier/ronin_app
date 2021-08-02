@@ -1,6 +1,7 @@
 package com.roninswdstudio.ronin_app.dao;
 
 import com.roninswdstudio.ronin_app.entity.Artist;
+import com.roninswdstudio.ronin_app.entity.ExhibitImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,7 @@ public interface ArtistDao extends JpaRepository<Artist, Long> {
             nativeQuery = true
     )
     Page<Artist> findAllBySearchTerm(String search, Pageable pageable);
+
+    Artist save(Artist artist);
 }
 

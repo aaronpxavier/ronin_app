@@ -1,6 +1,11 @@
 package com.roninswdstudio.ronin_app.springsecurity.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.roninswdstudio.ronin_app.entity.Artist;
 import com.roninswdstudio.ronin_app.springsecurity.entity.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +17,10 @@ import java.util.List;
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
+
+    public User() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +36,14 @@ public class User {
     private Date dob;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<Role> roles = new ArrayList<>();
 
-    public User() {
-    }
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonManagedReference
+    private Artist artist;
+
+
 
     public Long getId() {
         return id;
@@ -56,12 +69,12 @@ public class User {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public boolean isLocked() {
+        return locked;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public boolean isEnabled() {
@@ -72,19 +85,27 @@ public class User {
         this.enabled = enabled;
     }
 
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
     public Date getDob() {
         return dob;
     }
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 }

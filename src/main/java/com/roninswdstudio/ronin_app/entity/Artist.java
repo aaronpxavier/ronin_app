@@ -1,7 +1,11 @@
 package com.roninswdstudio.ronin_app.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.roninswdstudio.ronin_app.springsecurity.entity.User;
+
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -10,6 +14,8 @@ public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    public Artist() {};
 
     @Column(name = "first_name")
     private String firstName;
@@ -22,7 +28,13 @@ public class Artist {
     private String username;
 
     @OneToMany(mappedBy = "artist", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ExhibitImage> exhibitImages;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
 
     public long getId() {
         return id;
@@ -56,6 +68,14 @@ public class Artist {
         this.bio = bio;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public List<ExhibitImage> getExhibitImages() {
         return exhibitImages;
     }
@@ -64,11 +84,11 @@ public class Artist {
         this.exhibitImages = exhibitImages;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

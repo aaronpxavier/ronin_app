@@ -1,5 +1,7 @@
 package com.roninswdstudio.ronin_app.springsecurity.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class Role {
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     public Role() {
