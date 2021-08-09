@@ -9,7 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(	name = "users",
@@ -17,9 +19,6 @@ import java.util.List;
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
-
-    public User() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,13 +42,32 @@ public class User {
     @JsonManagedReference
     private Artist artist;
 
+    public User() {
+    }
 
+    public User(LinkedHashMap<String, Object> userHashMap) {
+        try {
+            this.id = (long) userHashMap.get("id");
+        } catch (ClassCastException e) {
+            this.id = (long) (int) userHashMap.get("id");
+        }
 
-    public Long getId() {
+        this.email = (String) userHashMap.get("email");
+        this.locked = (boolean) userHashMap.get("locked");
+        this.enabled = (boolean) userHashMap.get("enabled");
+        this.dob = new Date((long) userHashMap.get("dob"));
+        this.roles = ((ArrayList<LinkedHashMap<String, Object>>) userHashMap.get("roles"))
+                .parallelStream()
+                .map(r -> new Role(ERole.valueOf((String) r.get("name"))))
+                .collect(Collectors.toList());
+        this.artist = new Artist((LinkedHashMap<String, Object>) userHashMap.get("artist"));
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

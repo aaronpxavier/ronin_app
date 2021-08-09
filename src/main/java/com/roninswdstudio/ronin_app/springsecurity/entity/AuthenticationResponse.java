@@ -11,8 +11,9 @@ public class AuthenticationResponse {
     private final String jwt;
     private List roles = new ArrayList<String>();
 
-    public AuthenticationResponse(String jwt, UserDetails userDetails) {
+    public AuthenticationResponse(String jwt, User user) {
         this.jwt = jwt;
+        UserDetails userDetails = new RoninUserDetails(user);
         Iterator<? extends GrantedAuthority> authIterator = userDetails.getAuthorities().iterator();
         while(authIterator.hasNext()) {
             roles.add(authIterator.next().toString());

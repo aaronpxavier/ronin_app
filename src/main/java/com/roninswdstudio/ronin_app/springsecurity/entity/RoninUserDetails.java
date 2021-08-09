@@ -66,4 +66,5 @@ public class RoninUserDetails implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 }

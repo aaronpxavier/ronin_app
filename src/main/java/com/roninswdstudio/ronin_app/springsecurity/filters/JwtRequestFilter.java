@@ -1,5 +1,6 @@
 package com.roninswdstudio.ronin_app.springsecurity.filters;
 
+import com.roninswdstudio.ronin_app.springsecurity.entity.RoninUserDetails;
 import com.roninswdstudio.ronin_app.springsecurity.services.JwtUtil;
 import com.roninswdstudio.ronin_app.springsecurity.services.RoninUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -31,23 +31,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
         UserDetails userDetails;
-        Cookie [] cookies = request.getCookies();
         UsernamePasswordAuthenticationToken userPassAuthToken;
-        String jwt = authorizationHeader != null && authorizationHeader.length() > 7 ? authorizationHeader.substring(7) : null;
-        // code block executes if cookie based authentication is being used.
-        if(jwt == null && cookies != null) {
-            jwt = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("jwtToken"))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
+        String jwt = authorizationHeader != null && authorizationHeader.length() > 7 ?
+                authorizationHeader.substring(7) : JwtUtil.getJWTFromCookie(request);// jwt private member is also set so getToken will return token from bean
         if(jwt != null && jwtUtil.validateToken(jwt)) {
-            userDetails = jwtUtil.extractUserDetails(jwt);
+            userDetails = new RoninUserDetails(jwtUtil.extractUser(jwt));
             userPassAuthToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             userPassAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(userPassAuthToken);
         }
+
         chain.doFilter(request, response);
     }
 }

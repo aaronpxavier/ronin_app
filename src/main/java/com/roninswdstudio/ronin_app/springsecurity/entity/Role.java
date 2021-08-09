@@ -20,9 +20,9 @@ public class Role {
     @JsonBackReference
     private User user;
 
-    public Role() {
+    public Role() {}
 
-    }
+
 
     public Role(ERole name) {
         this.name = name;
