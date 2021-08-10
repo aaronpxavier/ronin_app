@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 @Entity
 @Table(	name = "exhibit_images")
 public class ExhibitImage {
-    public ExhibitImage() {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -34,6 +35,21 @@ public class ExhibitImage {
     @JoinColumn(name = "cat_id")
     @JsonBackReference(value = "category2")
     private Category cat;
+
+    public ExhibitImage() {}
+
+    public ExhibitImage(LinkedHashMap<String, Object> imgMap) {
+        try {
+            this.id = (long) imgMap.get("id");
+        } catch (ClassCastException e) {
+            this.id = (long) (int) imgMap.get("id");
+        }
+        this.title = (String) imgMap.get("title");
+        this.date = new Date((long) imgMap.get("date"));
+        this.uploadDate = new Date((long) imgMap.get("uploadDate"));
+        this.description = (String) imgMap.get("description");
+        this.imageURL = (String) imgMap.get("imageURL");
+    }
 
     public long getId() {
         return id;

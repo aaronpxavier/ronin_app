@@ -6,7 +6,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roninswdstudio.ronin_app.springsecurity.entity.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(	name = "artist")
@@ -14,8 +17,6 @@ public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    public Artist() {};
 
     @Column(name = "first_name")
     private String firstName;
@@ -35,6 +36,24 @@ public class Artist {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    public Artist() {};
+
+    public Artist(LinkedHashMap<String, Object> artistMap) {
+        try {
+            this.id = (long) artistMap.get("id");
+        } catch (ClassCastException e) {
+            this.id = (long) (int) artistMap.get("id");
+        }
+        this.firstName = (String) artistMap.get("firstName");
+        this.lastName = (String) artistMap.get("lastName");
+        this.bio = (String) artistMap.get("bio");
+        this.username = (String) artistMap.get("username");
+        this.exhibitImages = ((ArrayList<LinkedHashMap<String, Object>>) artistMap.get("exhibitImages"))
+                .parallelStream()
+                .map(ExhibitImage::new)
+                .collect(Collectors.toList());
+    }
 
     public long getId() {
         return id;

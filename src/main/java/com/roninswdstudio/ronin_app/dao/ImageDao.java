@@ -18,4 +18,6 @@ public interface ImageDao extends JpaRepository<ExhibitImage, Long> {
             nativeQuery = true
     )
     Page<ExhibitImage> findAllImagesBySearchTerm(String search, Pageable pageable);
+
+    ExhibitImage save(ExhibitImage exhibitImage);
 }

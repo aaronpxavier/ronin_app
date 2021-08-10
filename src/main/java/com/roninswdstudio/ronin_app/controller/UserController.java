@@ -8,9 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.util.Date;
-
 @RestController
 public class UserController {
     UserService userService;
@@ -19,7 +16,7 @@ public class UserController {
         this.userService = userService;
     }
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/admin/user/add")
-    public ResponseEntity<?> addArtist(@RequestBody User user)  throws ParseException {
+    public ResponseEntity<?> addArtist(@RequestBody User user) {
         try {
             user.getRoles().parallelStream().forEach(role -> role.setUser(user));
             return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);

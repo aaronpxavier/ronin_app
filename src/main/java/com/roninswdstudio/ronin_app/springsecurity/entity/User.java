@@ -22,7 +22,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     private String email;
 
@@ -58,7 +58,7 @@ public class User {
         this.dob = new Date((long) userHashMap.get("dob"));
         this.roles = ((ArrayList<LinkedHashMap<String, Object>>) userHashMap.get("roles"))
                 .parallelStream()
-                .map(r -> new Role(ERole.valueOf((String) r.get("name"))))
+                .map(Role::new)
                 .collect(Collectors.toList());
         this.artist = new Artist((LinkedHashMap<String, Object>) userHashMap.get("artist"));
     }
@@ -125,5 +125,10 @@ public class User {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public boolean isAdmin() {
+        return roles.parallelStream()
+                .anyMatch(r -> r.getName() == ERole.ROLE_ADMIN);
     }
 }
